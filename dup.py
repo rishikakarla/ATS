@@ -52,7 +52,7 @@ dietary restrictions:
 ## streamlit app
 st.title("HMA")
 st.text("Health management Assistance")
-jd = st.text_area("write the condition of you")
+jd = st.text_area("write the health condition of you if not N/A")
 uploaded_file = st.file_uploader(
     "Upload Your profile", type="pdf", help="Please uplaod the pp"
 )
