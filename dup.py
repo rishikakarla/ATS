@@ -35,20 +35,23 @@ with a deep understanding of nutrition, physcial excersises, food and humans hea
 . Your task is to evaluate the Health condition based on the given Patient Profile.
 You must consider the Healthcare is very competitive and you should provide 
 best assistance for improving the Health Condition.
-Utilize this information to generate tailored suggestions for food intake and physical activities. Consider factors such as dietary restrictions, calorie needs, nutritional requirements, and suitable exercise routines based on the patient's profileand address any specific health concerns the patient may have and  with high accuracy
+Utilize this information to generate tailored suggestions for food intake and physical activities. Consider factors such as dietary restrictions, calorie needs, nutritional requirements, and suitable exercise routines based on the patient's profileand address any specific health concerns the patient may have  with high accuracy
+assign the BMR in calories by taking the inputs from the Patient Profile
 Patient Profile:{text}
 health issues:{jd}
 
-I want the below response in paragraph format 
-{{"food intake:[]",
-"recommend physical activities to do":"",
-"calorie needs, nutritional requirements ":"",
-"dietary restrictions":"",}}
+I only want the below responses in paragraph format not print patient profile and health issues
+{{BMR : ()
+    food intake:[],
+recommend physical activities to do:,
+calorie needs, nutritional requirements :,
+dietary restrictions:
+ .}}
 """
 
 ## streamlit app
-st.title("HMS")
-st.text("#")
+st.title("HMA")
+st.text("Health management Assistance")
 jd = st.text_area("write the condition of you")
 uploaded_file = st.file_uploader(
     "Upload Your profile", type="pdf", help="Please uplaod the pp"
