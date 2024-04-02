@@ -7,7 +7,7 @@ import json
 
 load_dotenv()  ## load all our environment variables
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=os.getenv("AIzaSyAZNiLH-wqNPkl1OtPRkD0BqMPeCAM1gjE"))
 
 
 def get_gemini_repsonse(input):
@@ -34,17 +34,23 @@ Hey Act Like a skilled or very experience ATS(Application Tracking System)
 with a deep understanding of tech field,software engineering,data science ,data analyst
 and big data engineer. Your task is to evaluate the resume based on the given job description.
 You must consider the job market is very competitive and you should provide 
-best assistance for improving thr resumes. Assign the percentage Matching based 
-on Jd and
-the missing keywords with high accuracy
+best assistance for improving thr resumes. 
+Profile summary must be based on the resume, not job description. Assign the percentage Matching based 
+on Jd and the missing keywords with high accuracy. 
+Give the existing jobs that matches the profile and can be applied.
+do not create any. Check the skills required and correctly with high accuracy
 resume:{text}
 description:{jd}
 
-I want the below response in paragraph format 
-{{"JD Match":"%",
+I want the below response in Headings and details format
+
+{{"Role Match":"%",
 "MissingKeywords:[]",
 "Profile Summary":"",
-"recommend courses to learn and resources":""}}
+"Jobs matches with their links":"",
+"recommend courses to learn with links":"",
+"resources for skill improvement (Give certifications)":""
+"possible resume change":""}}
 """
 
 ## streamlit app
