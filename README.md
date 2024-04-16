@@ -11,12 +11,11 @@ Job Fit Analyzer
 
 ## you can run this on your local machine:
 To get a hands-on experience with Gemini Pro, follow these simple steps:
-1. Clone the repository:  https://github.com/Nukaraju2003/ATS.git
 
-2. Navigate to the project directory: cd ATS
+1. Navigate to the project directory: cd ATS
    
-3. Install the required dependencies: pip install -r requirements.txt
+2. Install the required dependencies: pip install -r requirements.txt
 
-4. Run the Streamlit app: streamlit run app.py
+3. Run the Streamlit app: streamlit run app.py
 
 # Witness Gemini Pro in Action 
