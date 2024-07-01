@@ -1,52 +1,57 @@
-import streamlit as st
-import google.generativeai as genai
 import os
+
+import streamlit as st
 from dotenv import load_dotenv
-import json
-
-load_dotenv() 
-
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+import google.generativeai as gen_ai
 
 
-def get_gemini_repsonse(input):
-    model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content(input)
-    return response.text
+# Load environment variables
+load_dotenv()
 
-input_prompt = """
-Hey Act Like a skilled or very experience HMA(Health Management Assistence)
-with a deep understanding of nutrition, physcial excersises, food and humans health conditions
-. Your task is to evaluate the Health condition based on the given Patient Profile.
-You must consider the Healthcare is very competitive and you should provide 
-best assistance for improving the Health Condition.
-Utilize this information to generate tailored suggestions for food intake and physical activities. Consider factors such as dietary restrictions, calorie needs, nutritional requirements, and suitable exercise routines based on the patient's profileand address any specific health concerns the patient may have  with high accuracy
-assign the BMR in calories by taking the inputs from the age, gender, weight, height
-age:{age}
-gender:{sex}
-weight:{kgs}
-height:{cms}
-health issues:{hi}
+# Configure Streamlit page settings
+st.set_page_config(
+    page_title="Rishi's Bot!",
+    page_icon=":brain:",  # Favicon emoji
+    layout="centered",  # Page layout option
+)
 
-I only want the below responses in paragraph format not print patient profile and health issues
-{{BMR : ()
-    food intake:[],
-recommend physical activities to do:,
-calorie needs, nutritional requirements :,
-dietary restrictions:
- .}}
-"""
-st.title("HMA")
-st.text("Health management Assistance")
-age = st.text_area("Enter your age")
-sex = st.text_area("Enter your gender")
-kgs = st.text_area("Enter your weight(kg's)")
-cms = st.text_area("Enter your height(cm's)")
-hi = st.text_area("write the condition of you")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
+# Set up Google Gemini-Pro AI model
+gen_ai.configure(api_key=GOOGLE_API_KEY)
+model = gen_ai.GenerativeModel('gemini-pro')
 
 
-submit = st.button("Submit")
+# Function to translate roles between Gemini-Pro and Streamlit terminology
+def translate_role_for_streamlit(user_role):
+    if user_role == "model":
+        return "assistant"
+    else:
+        return user_role
 
-if submit:
-        response = get_gemini_repsonse(input_prompt)
-        st.subheader(response)
+
+# Initialize chat session in Streamlit if not already present
+if "chat_session" not in st.session_state:
+    st.session_state.chat_session = model.start_chat(history=[])
+
+
+# Display the chatbot's title on the page
+st.title("🤖 Rishi's - ChatBot")
+
+# Display the chat history
+for message in st.session_state.chat_session.history:
+    with st.chat_message(translate_role_for_streamlit(message.role)):
+        st.markdown(message.parts[0].text)
+
+# Input field for user's message
+user_prompt = st.chat_input("Ask Rishi...")
+if user_prompt:
+    # Add user's message to chat and display it
+    st.chat_message("user").markdown(user_prompt)
+
+    # Send user's message to Gemini-Pro and get the response
+    gemini_response = st.session_state.chat_session.send_message(user_prompt)
+
+    # Display Gemini-Pro's response
+    with st.chat_message("assistant"):
+        st.markdown(gemini_response.text)
