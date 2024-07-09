@@ -2,6 +2,8 @@
 
 AI Resume Reviewer : Integrating Google's Generative AI (Gemini) into a Python application using Streamlit and deploying it as a Streamlit application.
 
+# **App Link:** https://healthmanagementassistance.streamlit.app/
+
 Job Fit Analyzer
 
 1. What’s wrong with my resume ? 
