@@ -1,57 +1,49 @@
-import os
-
 import streamlit as st
+import google.generativeai as genai
+import os
+import PyPDF2 as pdf
 from dotenv import load_dotenv
-import google.generativeai as gen_ai
+import json
+
+load_dotenv()  
+
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
-# Load environment variables
-load_dotenv()
-
-# Configure Streamlit page settings
-st.set_page_config(
-    page_title="Rishi's Bot!",
-    page_icon=":brain:",  # Favicon emoji
-    layout="centered",  # Page layout option
-)
-
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-
-# Set up Google Gemini-Pro AI model
-gen_ai.configure(api_key=GOOGLE_API_KEY)
-model = gen_ai.GenerativeModel('gemini-pro')
+def get_gemini_repsonse(input):
+    model = genai.GenerativeModel("gemini-pro")
+    response = model.generate_content(input)
+    return response.text
 
 
-# Function to translate roles between Gemini-Pro and Streamlit terminology
-def translate_role_for_streamlit(user_role):
-    if user_role == "model":
-        return "assistant"
-    else:
-        return user_role
+
+input_prompt = """
+Hey Act Like a skilled or very experience HMA(Health Management Assistence)
+with a deep understanding of nutrition, physcial excersises, food and humans health conditions
+. Your task is to evaluate the Health condition based on the given Patient Profile.
+You must consider the Healthcare is very competitive and you should provide 
+best assistance for improving the Health Condition.Utilize this information to generate tailored suggestions for BMR of patient and food intake and physical activities. Consider factors such as dietary restrictions, calorie needs, nutritional requirements, and suitable exercise routines based on the given age,height, weight, gender, health condition and allergies and address any specific health concerns the patient may have and profile summary with high accuracy.
+Patient Age:{age}
+patient height in cm:{cm}
+patient weight:{kg}
+patient Gender:{sex}
+Patient health condition/allergies:{hd}
 
 
-# Initialize chat session in Streamlit if not already present
-if "chat_session" not in st.session_state:
-    st.session_state.chat_session = model.start_chat(history=[])
+I want the below response in paragraph format 
+{{
+"**BMR:[]**",
+"food intake:[]",
+"Profile Summary":"",
+"recommend physical activities to do":"",
+"calorie needs, nutritional requirements ":"",
+"dietary restrictions":"",}}
+"""
 
-
-# Display the chatbot's title on the page
-st.title("🤖 Rishi's - ChatBot")
-
-# Display the chat history
-for message in st.session_state.chat_session.history:
-    with st.chat_message(translate_role_for_streamlit(message.role)):
-        st.markdown(message.parts[0].text)
-
-# Input field for user's message
-user_prompt = st.chat_input("Ask Rishi...")
-if user_prompt:
-    # Add user's message to chat and display it
-    st.chat_message("user").markdown(user_prompt)
-
-    # Send user's message to Gemini-Pro and get the response
-    gemini_response = st.session_state.chat_session.send_message(user_prompt)
-
-    # Display Gemini-Pro's response
-    with st.chat_message("assistant"):
-        st.markdown(gemini_response.text)
+st.title("Smart HMA")
+age = st.text_area("Age")
+cm = st.text_area("Height in cm")
+kg = st.text_area("Weight in kg")
+sex = st.text_area("Gender")
+hd = st.text_area("Health Conditions/Allergies")
+submit = st.button("Submit")
